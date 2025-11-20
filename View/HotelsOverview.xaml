@@ -1,0 +1,35 @@
+﻿<Window x:Class="BookingApp.View.HotelsOverview"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Prikaz hotela" Height="350" Width="600"
+        WindowStartupLocation="CenterScreen">
+	<DockPanel Margin="10">
+
+		<!-- Gornji deo: izbor nacina sortiranja -->
+		<StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,10">
+			<TextBlock Text="Sortiranje po broju zvezdica:"
+                       VerticalAlignment="Center" Margin="0,0,10,0"/>
+			<ComboBox Width="150"
+                      SelectedValue="{Binding SelectedSortOrder}"
+                      SelectedValuePath="Content">
+				<ComboBoxItem Content="Bez sortiranja"/>
+				<ComboBoxItem Content="Rastuce"/>
+				<ComboBoxItem Content="Opadajuce"/>
+			</ComboBox>
+		</StackPanel>
+
+		<!-- Glavni deo: tabela hotela -->
+		<DataGrid ItemsSource="{Binding Hotels}"
+                  AutoGenerateColumns="False"
+                  CanUserAddRows="False">
+			<DataGrid.Columns>
+				<DataGridTextColumn Header="Sifra" Binding="{Binding Code}" />
+				<DataGridTextColumn Header="Naziv" Binding="{Binding Name}" />
+				<DataGridTextColumn Header="Godina izgradnje" Binding="{Binding ConstructionYear}" />
+				<DataGridTextColumn Header="Broj zvezdica" Binding="{Binding Stars}" />
+				<!-- NAMERNO NE STAVLJAMO OwnerJmbg kolonu -->
+			</DataGrid.Columns>
+		</DataGrid>
+
+	</DockPanel>
+</Window>

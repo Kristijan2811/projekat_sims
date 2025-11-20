@@ -1,0 +1,93 @@
+﻿<Window x:Class="BookingApp.View.HotelSearchWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Pretraga hotela" Height="450" Width="750"
+        WindowStartupLocation="CenterScreen">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Margin="0,0,0,10">
+
+            <!-- Izbor tipa pretrage -->
+            <TextBlock Text="Parametar pretrage:" Margin="0,0,0,5"/>
+            <ComboBox Width="250"
+                      SelectedValue="{Binding SelectedSearchOption}"
+                      SelectedValuePath="Content">
+                <ComboBoxItem Content="Po imenu"/>
+                <ComboBoxItem Content="Po godini izgradnje"/>
+                <ComboBoxItem Content="Po broju zvezdica"/>
+                <ComboBoxItem Content="Pretraga po apartmanima"/>
+            </ComboBox>
+
+            <!-- Tekst za ime/godinu/zvezdice -->
+            <TextBlock Text="Vrednost pretrage (ime / godina / zvezdice):"
+                       Margin="0,10,0,5"/>
+            <TextBox Width="250"
+                     Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
+
+            <!-- Pretraga po apartmanima -->
+            <GroupBox Header="Pretraga po apartmanima" Margin="0,10,0,0">
+                <StackPanel Margin="5">
+
+                    <TextBlock Text="Tip pretrage po apartmanima:" Margin="0,0,0,5"/>
+                    <ComboBox Width="250"
+                              SelectedValue="{Binding SelectedApartmentSearchOption}"
+                              SelectedValuePath="Content">
+                        <ComboBoxItem Content="Broj soba"/>
+                        <ComboBoxItem Content="Broj gostiju"/>
+                        <ComboBoxItem Content="Broj soba + broj gostiju"/>
+                    </ComboBox>
+
+                    <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                        <TextBlock Text="Broj soba:" VerticalAlignment="Center"/>
+                        <TextBox Width="60" Margin="5,0,0,0"
+                                 Text="{Binding ApartmentRoomsText, UpdateSourceTrigger=PropertyChanged}"/>
+
+                        <TextBlock Text="Broj gostiju:" Margin="15,0,0,0"
+                                   VerticalAlignment="Center"/>
+                        <TextBox Width="60" Margin="5,0,0,0"
+                                 Text="{Binding ApartmentGuestsText, UpdateSourceTrigger=PropertyChanged}"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                        <TextBlock Text="Operator:" VerticalAlignment="Center"/>
+                        <ComboBox Width="80" Margin="5,0,0,0"
+                                  SelectedValue="{Binding SelectedLogicalOperator}"
+                                  SelectedValuePath="Content">
+                            <ComboBoxItem Content="AND"/>
+                            <ComboBoxItem Content="OR"/>
+                        </ComboBox>
+                        <TextBlock Text="(za kombinaciju broj soba + broj gostiju)"
+                                   Margin="10,0,0,0"
+                                   VerticalAlignment="Center"
+                                   FontStyle="Italic"/>
+                    </StackPanel>
+
+                </StackPanel>
+            </GroupBox>
+
+            <Button Content="Pretrazi"
+                    Width="100" Height="30"
+                    Margin="0,10,0,0"
+                    HorizontalAlignment="Left"
+                    Click="SearchButton_Click"/>
+        </StackPanel>
+
+        <!-- Rezultati -->
+        <DataGrid Grid.Row="1"
+                  ItemsSource="{Binding Hotels}"
+                  AutoGenerateColumns="False"
+                  CanUserAddRows="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Sifra" Binding="{Binding Code}" />
+                <DataGridTextColumn Header="Naziv" Binding="{Binding Name}" />
+                <DataGridTextColumn Header="Godina izgradnje" Binding="{Binding ConstructionYear}" />
+                <DataGridTextColumn Header="Zvezdice" Binding="{Binding Stars}" />
+                <!-- NAMERNO NEMA OwnerJmbg -->
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Window>

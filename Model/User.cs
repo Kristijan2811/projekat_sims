@@ -1,4 +1,5 @@
-﻿using BookingApp.Serializer;
+﻿
+using BookingApp.Serializer;
 using System;
 
 namespace BookingApp.Model
@@ -6,28 +7,54 @@ namespace BookingApp.Model
     public class User : ISerializable
     {
         public int Id { get; set; }
-        public string Username { get; set; }
+        public string Jmbg { get; set; }
+        public string Email { get; set; }
         public string Password { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string PhoneNumber { get; set; }
+        public UserType UserType { get; set; }
 
         public User() { }
 
-        public User(string username, string password)
+        public User(string jmbg, string email, string password,
+                    string firstName, string lastName,
+                    string phoneNumber, UserType userType)
         {
-            Username = username;
+            Jmbg = jmbg;
+            Email = email;
             Password = password;
+            FirstName = firstName;
+            LastName = lastName;
+            PhoneNumber = phoneNumber;
+            UserType = userType;
         }
 
         public string[] ToCSV()
         {
-            string[] csvValues = { Id.ToString(), Username, Password };
-            return csvValues;
+            return new[]
+            {
+                Id.ToString(),
+                Jmbg,
+                Email,
+                Password,
+                FirstName,
+                LastName,
+                PhoneNumber,
+                UserType.ToString()
+            };
         }
 
         public void FromCSV(string[] values)
         {
             Id = Convert.ToInt32(values[0]);
-            Username = values[1];
-            Password = values[2];
+            Jmbg = values[1];
+            Email = values[2];
+            Password = values[3];
+            FirstName = values[4];
+            LastName = values[5];
+            PhoneNumber = values[6];
+            UserType = Enum.Parse<UserType>(values[7]);
         }
     }
 }

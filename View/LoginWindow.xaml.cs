@@ -2,28 +2,33 @@
 using BookingApp.Repository;
 using BookingApp.Service;
 using BookingApp.ViewModel;
-//using BookingApp.View;
-
 
 namespace BookingApp.View
 {
-    public partial class SignInForm : Window
+    public partial class LoginWindow : Window
     {
         private readonly LoginViewModel _viewModel;
 
-        public SignInForm()
+        public LoginWindow()
         {
             InitializeComponent();
 
+            // 1. Repository
             var userRepository = new UserRepository();
+
+            // 2. Service
             var userService = new UserService(userRepository);
+
+            // 3. ViewModel
             _viewModel = new LoginViewModel(userService);
 
+            // 4. Povezivanje View <- ViewModel
             DataContext = _viewModel;
         }
 
         private void LoginButton_Click(object sender, RoutedEventArgs e)
         {
+            // Email moze iz bindinga, ali ovako si siguran:
             _viewModel.Email = EmailTextBox.Text;
             _viewModel.Password = PasswordBox.Password;
 
@@ -31,12 +36,8 @@ namespace BookingApp.View
 
             if (user == null)
             {
-                MessageBox.Show(
-                    "Pogresan email ili lozinka.",
-                    "Prijava",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error
-                );
+                MessageBox.Show("Pogresan email ili lozinka.", "Prijava",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -47,9 +48,9 @@ namespace BookingApp.View
                 MessageBoxImage.Information
             );
 
-            var mainMenu = new MainMenu(user);
-            mainMenu.Show();
-            this.Close();
+            // TODO: ovde ces kasnije da otvoris prozor za Administratora/Gosta/Vlasnika
+            // npr:
+            // if (user.UserType == UserType.Administrator) { ... }
         }
     }
 }
