@@ -5,33 +5,38 @@ using BookingApp.ViewModel;
 
 namespace BookingApp.View
 {
-    public partial class SignInForm : Window
+    public partial class RegisterWindow : Window
     {
-        private readonly LoginViewModel _viewModel;
+        private readonly RegisterViewModel _viewModel;
 
-        public SignInForm()
+        public RegisterWindow()
         {
             InitializeComponent();
 
             var userRepository = new UserRepository();
             var userService = new UserService(userRepository);
-            _viewModel = new LoginViewModel(userService);
 
+            _viewModel = new RegisterViewModel(userService);
             DataContext = _viewModel;
         }
 
-        private void LoginButton_Click(object sender, RoutedEventArgs e)
+        private void RegisterButton_Click(object sender, RoutedEventArgs e)
         {
+            // uzimamo vrednosti iz UI (posebno lozinku iz PasswordBox-a)
+            _viewModel.Jmbg = JmbgTextBox.Text;
+            _viewModel.FirstName = FirstNameTextBox.Text;
+            _viewModel.LastName = LastNameTextBox.Text;
+            _viewModel.PhoneNumber = PhoneTextBox.Text;
             _viewModel.Email = EmailTextBox.Text;
             _viewModel.Password = PasswordBox.Password;
 
-            var user = _viewModel.TryLogin();
+            var user = _viewModel.TryRegister();
 
             if (user == null)
             {
                 MessageBox.Show(
-                    "Pogresan email ili lozinka.",
-                    "Prijava",
+                    "Email ili lozinka vec postoje. Unesite druge vrednosti.",
+                    "Registracija",
                     MessageBoxButton.OK,
                     MessageBoxImage.Error
                 );
@@ -39,22 +44,13 @@ namespace BookingApp.View
             }
 
             MessageBox.Show(
-                $"Uspesna prijava: {user.FirstName} {user.LastName} ({user.UserType})",
-                "Prijava",
+                "Uspesna registracija! Sada se mozete prijaviti.",
+                "Registracija",
                 MessageBoxButton.OK,
                 MessageBoxImage.Information
             );
 
-            var mainMenu = new MainMenu(user);
-            mainMenu.Show();
             this.Close();
-        }
-
-        private void RegisterButton_Click(object sender, RoutedEventArgs e)
-        {
-            // Otvara prozor za registraciju gosta
-            var registerWindow = new RegisterWindow();
-            registerWindow.ShowDialog();
         }
     }
 }

@@ -1,0 +1,42 @@
+﻿<Window x:Class="BookingApp.View.ApartmentReservationWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Rezervacija apartmana" Height="400" Width="700"
+        WindowStartupLocation="CenterScreen">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Lista apartmana -->
+        <DataGrid Grid.Row="0"
+                  ItemsSource="{Binding Apartments}"
+                  SelectedItem="{Binding SelectedApartment}"
+                  AutoGenerateColumns="False"
+                  CanUserAddRows="False"
+                  Margin="0,0,0,10">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Apartman" Binding="{Binding ApartmentName}" />
+                <DataGridTextColumn Header="Hotel" Binding="{Binding HotelName}" />
+                <DataGridTextColumn Header="Broj soba" Binding="{Binding RoomCount}" />
+                <DataGridTextColumn Header="Max gostiju" Binding="{Binding MaxGuests}" />
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- Datum + dugme rezervisi -->
+        <StackPanel Grid.Row="1"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right">
+            <TextBlock Text="Datum: "
+                       VerticalAlignment="Center"
+                       Margin="0,0,5,0"/>
+            <DatePicker SelectedDate="{Binding SelectedDate}"
+                        Width="150"
+                        Margin="0,0,10,0" />
+            <Button Content="Rezervisi"
+                    Width="100" Height="30"
+                    Click="ReserveButton_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>

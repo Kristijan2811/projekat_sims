@@ -31,5 +31,59 @@ namespace BookingApp.View
             var searchWindow = new HotelSearchWindow();
             searchWindow.Show();
         }
+
+        private void ReserveApartmentButton_Click(object sender, RoutedEventArgs e)
+        {
+            // dozvoljeno samo gostima
+            if (_loggedInUser == null || _loggedInUser.UserType != UserType.Guest)
+            {
+                MessageBox.Show(
+                    "Samo gosti mogu da rezervisu apartmane.",
+                    "Rezervacija apartmana",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information
+                );
+                return;
+            }
+
+            var reservationWindow = new ApartmentReservationWindow(_loggedInUser);
+            reservationWindow.Show();
+        }
+
+        private void ReserveApartmentMultiDayButton_Click(object sender, RoutedEventArgs e)
+        {
+            // isto pravilo: samo gosti
+            if (_loggedInUser == null || _loggedInUser.UserType != UserType.Guest)
+            {
+                MessageBox.Show(
+                    "Samo gosti mogu da rezervisu apartmane.",
+                    "Rezervacija apartmana",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information
+                );
+                return;
+            }
+
+            var reservationWindow = new ApartmentMultiDayReservationWindow(_loggedInUser);
+            reservationWindow.Show();
+        }
+
+        private void ShowGuestReservationsButton_Click(object sender, RoutedEventArgs e)
+        {
+            // samo gosti imaju svoje rezervacije
+            if (_loggedInUser == null || _loggedInUser.UserType != UserType.Guest)
+            {
+                MessageBox.Show(
+                    "Samo gosti imaju svoje rezervacije.",
+                    "Moje rezervacije",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information
+                );
+                return;
+            }
+
+            var window = new GuestReservationsWindow(_loggedInUser);
+            window.Show();
+        }
     }
 }

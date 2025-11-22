@@ -1,16 +1,28 @@
 ﻿<Window x:Class="BookingApp.View.MainMenu"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Glavni meni" Height="200" Width="350"
+        Title="Glavni meni" Height="360" Width="350"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize">
-	<StackPanel Margin="20">
-		<Button Content="Prikaz svih hotela po zvezdicama"
+    <StackPanel Margin="20">
+        <Button Content="Prikaz svih hotela po zvezdicama"
                 Height="40" Margin="0,0,0,10"
                 Click="ShowHotelsButton_Click"/>
 
-		<Button Content="Pretraga hotela"
-                Height="40"
+        <Button Content="Pretraga hotela"
+                Height="40" Margin="0,0,0,10"
                 Click="SearchHotelsButton_Click"/>
-	</StackPanel>
+
+        <Button Content="Rezervacija apartmana (1 dan)"
+                Height="40" Margin="0,0,0,10"
+                Click="ReserveApartmentButton_Click"/>
+
+        <Button Content="Rezervacija apartmana (vise dana)"
+                Height="40" Margin="0,0,0,10"
+                Click="ReserveApartmentMultiDayButton_Click"/>
+
+        <Button Content="Moje rezervacije"
+                Height="40"
+                Click="ShowGuestReservationsButton_Click"/>
+    </StackPanel>
 </Window>
