@@ -23,6 +23,11 @@ namespace BookingApp.Repository
             _apartments = _serializer.FromCSV(FilePath);
         }
 
+        private void Save()
+        {
+            _serializer.ToCSV(FilePath, _apartments);
+        }
+
         public List<Apartment> GetAll()
         {
             Load();
@@ -36,6 +41,22 @@ namespace BookingApp.Repository
                 .Where(a => a.HotelCode == hotelCode)
                 .ToList();
         }
+
+        // NOVO: dodavanje apartmana
+        public Apartment Add(Apartment apartment)
+        {
+            Load();
+
+            int nextId = _apartments.Count == 0
+                ? 1
+                : _apartments.Max(a => a.Id) + 1;
+
+            apartment.Id = nextId;
+
+            _apartments.Add(apartment);
+            Save();
+
+            return apartment;
+        }
     }
 }
-

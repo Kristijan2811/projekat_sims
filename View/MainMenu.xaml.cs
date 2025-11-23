@@ -85,5 +85,95 @@ namespace BookingApp.View
             var window = new GuestReservationsWindow(_loggedInUser);
             window.Show();
         }
+
+        // rezervacije iz perspektive vlasnika
+        private void OwnerReservationsButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_loggedInUser == null || _loggedInUser.UserType != UserType.Owner)
+            {
+                MessageBox.Show(
+                    "Samo vlasnici mogu da vide rezervacije za svoje apartmane.",
+                    "Rezervacije (vlasnik)",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information
+                );
+                return;
+            }
+
+            var window = new OwnerReservationsWindow(_loggedInUser);
+            window.Show();
+        }
+
+        // upravljanje sopstvenim hotelima (potvrda / odbijanje)
+        private void OwnerHotelsButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_loggedInUser == null || _loggedInUser.UserType != UserType.Owner)
+            {
+                MessageBox.Show(
+                    "Samo vlasnici mogu da upravljaju svojim hotelima.",
+                    "Moji hoteli",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information
+                );
+                return;
+            }
+
+            var window = new OwnerHotelsWindow(_loggedInUser);
+            window.Show();
+        }
+
+        // unos apartmana
+        private void AddApartmentButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_loggedInUser == null || _loggedInUser.UserType != UserType.Owner)
+            {
+                MessageBox.Show(
+                    "Samo vlasnici mogu da unose apartmane.",
+                    "Unos apartmana",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information
+                );
+                return;
+            }
+
+            var window = new AddApartmentWindow(_loggedInUser);
+            window.Show();
+        }
+
+        // registracija vlasnika (samo admin)
+        private void RegisterOwnerButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_loggedInUser == null || _loggedInUser.UserType != UserType.Administrator)
+            {
+                MessageBox.Show(
+                    "Samo administrator moze da registruje vlasnike.",
+                    "Registracija vlasnika",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information
+                );
+                return;
+            }
+
+            var window = new OwnerRegisterWindow();
+            window.Show();
+        }
+
+        // NOVO: unos hotela (samo admin)
+        private void AddHotelAdminButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_loggedInUser == null || _loggedInUser.UserType != UserType.Administrator)
+            {
+                MessageBox.Show(
+                    "Samo administrator moze da unosi hotele.",
+                    "Unos hotela",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information
+                );
+                return;
+            }
+
+            var window = new AddHotelWindow();
+            window.Show();
+        }
     }
 }

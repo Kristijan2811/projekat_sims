@@ -1,7 +1,7 @@
 ﻿<Window x:Class="BookingApp.View.MainMenu"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Glavni meni" Height="360" Width="350"
+        Title="Glavni meni" Height="600" Width="350"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize">
     <StackPanel Margin="20">
@@ -22,7 +22,32 @@
                 Click="ReserveApartmentMultiDayButton_Click"/>
 
         <Button Content="Moje rezervacije"
-                Height="40"
+                Height="40" Margin="0,0,0,10"
                 Click="ShowGuestReservationsButton_Click"/>
+
+        <!-- Rezervacije za moje apartmane (vlasnik) -->
+        <Button Content="Rezervacije (kao vlasnik)"
+                Height="40" Margin="0,0,0,10"
+                Click="OwnerReservationsButton_Click"/>
+
+        <!-- Potvrda / odbijanje hotela -->
+        <Button Content="Moji hoteli (potvrda)"
+                Height="40" Margin="0,0,0,10"
+                Click="OwnerHotelsButton_Click"/>
+
+        <!-- NOVO: Unos hotela (samo admin) -->
+        <Button Content="Unos hotela (admin)"
+                Height="40" Margin="0,0,0,10"
+                Click="AddHotelAdminButton_Click"/>
+
+        <!-- Unos apartmana -->
+        <Button Content="Unos apartmana"
+                Height="40" Margin="0,0,0,10"
+                Click="AddApartmentButton_Click"/>
+
+        <!-- Registracija vlasnika (samo admin) -->
+        <Button Content="Registracija vlasnika (admin)"
+                Height="40"
+                Click="RegisterOwnerButton_Click"/>
     </StackPanel>
 </Window>

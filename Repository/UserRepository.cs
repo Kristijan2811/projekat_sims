@@ -23,6 +23,12 @@ namespace BookingApp.Repository
             _users = _serializer.FromCSV(FilePath);
         }
 
+        // NOVO: izdvojeno cuvanje u CSV
+        private void Save()
+        {
+            _serializer.ToCSV(FilePath, _users);
+        }
+
         public List<User> GetAll()
         {
             Load();
@@ -35,14 +41,28 @@ namespace BookingApp.Repository
             return _users.FirstOrDefault(u => u.Email == email);
         }
 
-        // ➜ NOVO: pronalazak korisnika po lozinci
+        // OVO TI REALNO NI NE TREBA, ali ako se negde koristi – ostavljam
         public User GetByPassword(string password)
         {
             Load();
             return _users.FirstOrDefault(u => u.Password == password);
         }
 
-        // ➜ NOVO: racunanje sledeceg Id-a
+        // NOVO: pronalazak korisnika po JMBG-u
+        public User GetByJmbg(string jmbg)
+        {
+            Load();
+            return _users.FirstOrDefault(u => u.Jmbg == jmbg);
+        }
+
+        // NOVO: da li vec postoji korisnik sa tim JMBG ili email-om
+        public bool ExistsByJmbgOrEmail(string jmbg, string email)
+        {
+            Load();
+            return _users.Any(u => u.Jmbg == jmbg || u.Email == email);
+        }
+
+        // racunanje sledeceg Id-a
         private int NextId()
         {
             Load();
@@ -55,7 +75,7 @@ namespace BookingApp.Repository
             return _users.Max(u => u.Id) + 1;
         }
 
-        // ➜ NOVO: dodavanje novog korisnika i cuvanje u CSV
+        // dodavanje novog korisnika i cuvanje u CSV
         public User Add(User user)
         {
             Load();
@@ -63,7 +83,7 @@ namespace BookingApp.Repository
             user.Id = NextId();
             _users.Add(user);
 
-            _serializer.ToCSV(FilePath, _users);
+            Save();    // sad koristimo zajednicku Save() metodu
 
             return user;
         }

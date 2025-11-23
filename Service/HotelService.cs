@@ -16,24 +16,36 @@ namespace BookingApp.Service
             _apartmentRepository = apartmentRepository;
         }
 
-        // Obican prikaz svih hotela
+        // ===== HELPER: hoteli koji su vidljivi gostima (samo Approved) =====
+
+        private List<Hotel> GetAllApproved()
+        {
+            return _hotelRepository
+                .GetAll()
+                .Where(h => h.Status == HotelStatus.Approved)
+                .ToList();
+        }
+
+        // ===== GOSTI – PRIKAZ I PRETRAGA (SAMO ODOBRENI HOTELI) =====
+
+        // Obican prikaz svih hotela (vidljivih u sistemu) -> samo Approved
         public List<Hotel> GetAll()
         {
-            return _hotelRepository.GetAll();
+            return GetAllApproved();
         }
 
-        // NOVO: sortiranje po broju zvezdica sa izborom smera
+        // Sortiranje po broju zvezdica sa izborom smera (samo Approved)
         public List<Hotel> GetAllSortedByStars(bool ascending)
         {
-            var hotels = _hotelRepository.GetAll();
+            var hotels = GetAllApproved();
 
             return ascending
-                ? hotels.OrderBy(h => h.Stars).ToList()              // rastuće
-                : hotels.OrderByDescending(h => h.Stars).ToList();   // opadajuće
+                ? hotels.OrderBy(h => h.Stars).ToList()              // rastuce
+                : hotels.OrderByDescending(h => h.Stars).ToList();   // opadajuce
         }
 
-        // Stara verzija – ako je negde još pozivaš bez parametra,
-        // podrazumevano sortira OPADAJUĆE
+        // Stara verzija – ako je negde jos pozivas bez parametra,
+        // podrazumevano sortira OPADAJUCE (samo Approved)
         public List<Hotel> GetAllSortedByStars()
         {
             return GetAllSortedByStars(false);
@@ -41,7 +53,7 @@ namespace BookingApp.Service
 
         // ---------- PRETRAGA ----------
 
-        // 1) Pretraga po imenu (case-insensitive, delimično poklapanje)
+        // 1) Pretraga po imenu (case-insensitive, delimicno poklapanje)
         public List<Hotel> SearchByName(string namePart)
         {
             if (string.IsNullOrWhiteSpace(namePart))
@@ -49,8 +61,7 @@ namespace BookingApp.Service
 
             var lower = namePart.ToLower();
 
-            return _hotelRepository
-                .GetAll()
+            return GetAllApproved()
                 .Where(h => h.Name != null &&
                             h.Name.ToLower().Contains(lower))
                 .ToList();
@@ -59,8 +70,7 @@ namespace BookingApp.Service
         // 2) Pretraga po godini izgradnje
         public List<Hotel> SearchByConstructionYear(int year)
         {
-            return _hotelRepository
-                .GetAll()
+            return GetAllApproved()
                 .Where(h => h.ConstructionYear == year)
                 .ToList();
         }
@@ -68,8 +78,7 @@ namespace BookingApp.Service
         // 3) Pretraga po broju zvezdica
         public List<Hotel> SearchByStars(int stars)
         {
-            return _hotelRepository
-                .GetAll()
+            return GetAllApproved()
                 .Where(h => h.Stars == stars)
                 .ToList();
         }
@@ -77,7 +86,7 @@ namespace BookingApp.Service
         // 4.1) Pretraga po apartmanima - broj soba
         public List<Hotel> SearchByApartmentRooms(int roomCount)
         {
-            var hotels = _hotelRepository.GetAll();
+            var hotels = GetAllApproved();
             var result = new List<Hotel>();
 
             foreach (var hotel in hotels)
@@ -95,7 +104,7 @@ namespace BookingApp.Service
         // 4.2) Pretraga po apartmanima - broj gostiju
         public List<Hotel> SearchByApartmentGuests(int maxGuests)
         {
-            var hotels = _hotelRepository.GetAll();
+            var hotels = GetAllApproved();
             var result = new List<Hotel>();
 
             foreach (var hotel in hotels)
@@ -116,7 +125,7 @@ namespace BookingApp.Service
             int maxGuests,
             bool useAndOperator)   // true = AND (&), false = OR (|)
         {
-            var hotels = _hotelRepository.GetAll();
+            var hotels = GetAllApproved();
             var result = new List<Hotel>();
 
             foreach (var hotel in hotels)
@@ -144,6 +153,56 @@ namespace BookingApp.Service
             }
 
             return result;
+        }
+
+        // ============ VLASNIK - PREGLED I POTVRDA / ODBIJANJE HOTELA ============
+
+        // Hoteli za datog vlasnika (po JMBG-u) + opcioni filter po statusu
+        // OVO je za vlasnika – ovde vidimo i Pending i Rejected, ne filtriramo samo na Approved
+        public List<Hotel> GetOwnerHotels(string ownerJmbg, HotelStatus? statusFilter)
+        {
+            var hotels = _hotelRepository.GetByOwnerJmbg(ownerJmbg);
+
+            if (statusFilter.HasValue)
+            {
+                hotels = hotels
+                    .Where(h => h.Status == statusFilter.Value)
+                    .ToList();
+            }
+
+            return hotels
+                .OrderBy(h => h.Name)
+                .ToList();
+        }
+
+        // Vlasnik potvrdjuje hotel (na cekanju)
+        public bool ApproveHotelByOwner(int hotelId, string ownerJmbg)
+        {
+            var all = _hotelRepository.GetAll();
+            var hotel = all.FirstOrDefault(h => h.Id == hotelId && h.OwnerJmbg == ownerJmbg);
+            if (hotel == null)
+            {
+                return false;
+            }
+
+            hotel.Status = HotelStatus.Approved;
+            _hotelRepository.Update(hotel);
+            return true;
+        }
+
+        // Vlasnik odbija hotel (ako ga je admin pogresno spojio)
+        public bool RejectHotelByOwner(int hotelId, string ownerJmbg)
+        {
+            var all = _hotelRepository.GetAll();
+            var hotel = all.FirstOrDefault(h => h.Id == hotelId && h.OwnerJmbg == ownerJmbg);
+            if (hotel == null)
+            {
+                return false;
+            }
+
+            hotel.Status = HotelStatus.Rejected;
+            _hotelRepository.Update(hotel);
+            return true;
         }
     }
 }

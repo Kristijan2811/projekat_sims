@@ -15,6 +15,12 @@ namespace BookingApp.Service
             _reservationRepository = reservationRepository;
         }
 
+        // NOVO: sve rezervacije (za vlasnika, admina itd.)
+        public List<Reservation> GetAll()
+        {
+            return _reservationRepository.GetAll();
+        }
+
         // Provera da li je apartman slobodan za dati datum
         // Po zadatku: ne dozvoli ako je apartman ZAUZET (Approved) tog dana.
         public bool IsApartmentAvailable(int apartmentId, DateTime date)
@@ -72,7 +78,7 @@ namespace BookingApp.Service
                 .ToList();
         }
 
-        // ================== OTKAZIVANJE ==================
+        // ================== OTKAZIVANJE (GOST) ==================
 
         // Gost moze da otkaze samo svoje rezervacije koje su Pending ili Approved
         public bool CancelReservation(int reservationId, int guestId)
@@ -94,6 +100,42 @@ namespace BookingApp.Service
             }
 
             _reservationRepository.Delete(reservation.Id);
+            return true;
+        }
+
+        // ================== ODOBRAVANJE / ODBIJANJE (VLASNIK) ==================
+
+        public bool ApproveReservation(int reservationId)
+        {
+            var all = _reservationRepository.GetAll();
+            var reservation = all.FirstOrDefault(r => r.Id == reservationId);
+
+            if (reservation == null)
+            {
+                return false;
+            }
+
+            reservation.Status = ReservationStatus.Approved;
+            reservation.RejectionReason = string.Empty; // ocisti razlog ako je postojao
+
+            _reservationRepository.Update(reservation);
+            return true;
+        }
+
+        public bool RejectReservation(int reservationId, string rejectionReason)
+        {
+            var all = _reservationRepository.GetAll();
+            var reservation = all.FirstOrDefault(r => r.Id == reservationId);
+
+            if (reservation == null)
+            {
+                return false;
+            }
+
+            reservation.Status = ReservationStatus.Rejected;
+            reservation.RejectionReason = rejectionReason ?? string.Empty;
+
+            _reservationRepository.Update(reservation);
             return true;
         }
 

@@ -63,7 +63,8 @@ namespace BookingApp.Service
             string lastName,
             string phoneNumber)
         {
-            // pravilo iz zadatka: email i lozinka moraju biti JEDINSTVENI
+            // pravilo iz zadatka za GOSTA:
+            // email i lozinka moraju biti JEDINSTVENI
             if (!IsEmailUnique(email) || !IsPasswordUnique(password))
             {
                 return null;    // ViewModel/UI ce prikazati poruku o gresci
@@ -77,7 +78,45 @@ namespace BookingApp.Service
                 FirstName = firstName,
                 LastName = lastName,
                 PhoneNumber = phoneNumber,
-                UserType = UserType.Guest  // registracija je samo za goste
+                UserType = UserType.Guest
+            };
+
+            return _userRepository.Add(user);
+        }
+
+        // ================== REGISTRACIJA VLASNIKA (ADMIN) ==================
+
+        // pomozna metoda: da li postoji korisnik sa tim JMBG ili email-om
+        public bool IsJmbgOrEmailTaken(string jmbg, string email)
+        {
+            return _userRepository.ExistsByJmbgOrEmail(jmbg, email);
+        }
+
+        // Registracija vlasnika (poziva je administrator)
+        // pravilo iz zadatka: spreciti registraciju sa vec postojecim JMBG-om ili email-om
+        public User RegisterOwner(
+            string jmbg,
+            string email,
+            string password,
+            string firstName,
+            string lastName,
+            string phoneNumber)
+        {
+            // JMBG ili email vec postoje -> ne dozvoljavamo registraciju
+            if (IsJmbgOrEmailTaken(jmbg, email))
+            {
+                return null;
+            }
+
+            var user = new User
+            {
+                Jmbg = jmbg,
+                Email = email,
+                Password = password,
+                FirstName = firstName,
+                LastName = lastName,
+                PhoneNumber = phoneNumber,
+                UserType = UserType.Owner
             };
 
             return _userRepository.Add(user);

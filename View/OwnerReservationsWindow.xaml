@@ -1,0 +1,66 @@
+﻿<Window x:Class="BookingApp.View.OwnerReservationsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Rezervacije (vlasnik)" Height="500" Width="820"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize">
+	<DockPanel Margin="10">
+
+		<!-- Gornji deo: izbor hotela + filter -->
+		<StackPanel DockPanel.Dock="Top" Margin="0,0,0,10">
+			<StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+				<TextBlock Text="Hotel:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+				<ComboBox Width="250"
+                          ItemsSource="{Binding OwnerHotels}"
+                          SelectedItem="{Binding SelectedHotel}"
+                          DisplayMemberPath="Name"/>
+			</StackPanel>
+
+			<StackPanel Orientation="Horizontal">
+				<TextBlock Text="Filtriraj po statusu:"
+                           VerticalAlignment="Center"
+                           Margin="0,0,10,0"/>
+				<ComboBox Width="150"
+                          SelectedValue="{Binding SelectedFilter}"
+                          SelectedValuePath="Content">
+					<ComboBoxItem Content="Sve"/>
+					<ComboBoxItem Content="Na cekanju"/>
+					<ComboBoxItem Content="Potvrdjene"/>
+				</ComboBox>
+			</StackPanel>
+		</StackPanel>
+
+		<!-- Donji deo: razlog + dugmad -->
+		<StackPanel DockPanel.Dock="Bottom"
+                    Orientation="Horizontal"
+                    Margin="0,10,0,0"
+                    VerticalAlignment="Center">
+			<TextBlock Text="Razlog odbijanja:"
+                       VerticalAlignment="Center"/>
+			<TextBox Width="250" Margin="5,0,10,0"
+                     Text="{Binding RejectionReasonText, UpdateSourceTrigger=PropertyChanged}"/>
+
+			<Button Content="Potvrdi"
+                    Width="100" Height="30" Margin="0,0,5,0"
+                    Click="ApproveButton_Click"/>
+			<Button Content="Odbij"
+                    Width="100" Height="30"
+                    Click="RejectButton_Click"/>
+		</StackPanel>
+
+		<!-- Glavni deo: lista rezervacija -->
+		<DataGrid ItemsSource="{Binding Reservations}"
+                  SelectedItem="{Binding SelectedReservation}"
+                  AutoGenerateColumns="False"
+                  CanUserAddRows="False">
+			<DataGrid.Columns>
+				<DataGridTextColumn Header="Datum" Binding="{Binding Date, StringFormat=\{0:yyyy-MM-dd\}}" />
+				<DataGridTextColumn Header="Hotel" Binding="{Binding HotelName}" />
+				<DataGridTextColumn Header="Apartman" Binding="{Binding ApartmentName}" />
+				<DataGridTextColumn Header="Gost" Binding="{Binding GuestName}" />
+				<DataGridTextColumn Header="Status" Binding="{Binding StatusText}" />
+			</DataGrid.Columns>
+		</DataGrid>
+
+	</DockPanel>
+</Window>

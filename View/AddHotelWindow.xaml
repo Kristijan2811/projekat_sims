@@ -1,0 +1,63 @@
+﻿<Window x:Class="BookingApp.View.AddHotelWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Unos hotela (admin)" Height="350" Width="420"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Sifra -->
+        <TextBlock Text="Sifra hotela:" Grid.Row="0" Grid.Column="0"
+                   Margin="0,0,10,10" VerticalAlignment="Center"/>
+        <TextBox x:Name="CodeTextBox"
+                 Grid.Row="0" Grid.Column="1" Margin="0,0,0,10"
+                 Text="{Binding Code, UpdateSourceTrigger=PropertyChanged}"/>
+
+        <!-- Naziv -->
+        <TextBlock Text="Naziv:" Grid.Row="1" Grid.Column="0"
+                   Margin="0,0,10,10" VerticalAlignment="Center"/>
+        <TextBox x:Name="NameTextBox"
+                 Grid.Row="1" Grid.Column="1" Margin="0,0,0,10"
+                 Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
+
+        <!-- Godina izgradnje -->
+        <TextBlock Text="Godina izgradnje:" Grid.Row="2" Grid.Column="0"
+                   Margin="0,0,10,10" VerticalAlignment="Center"/>
+        <TextBox x:Name="YearTextBox"
+                 Grid.Row="2" Grid.Column="1" Margin="0,0,0,10"
+                 Text="{Binding ConstructionYearText, UpdateSourceTrigger=PropertyChanged}"/>
+
+        <!-- Broj zvezdica -->
+        <TextBlock Text="Broj zvezdica (1-5):" Grid.Row="3" Grid.Column="0"
+                   Margin="0,0,10,10" VerticalAlignment="Center"/>
+        <TextBox x:Name="StarsTextBox"
+                 Grid.Row="3" Grid.Column="1" Margin="0,0,0,10"
+                 Text="{Binding StarsText, UpdateSourceTrigger=PropertyChanged}"/>
+
+        <!-- JMBG vlasnika -->
+        <TextBlock Text="JMBG vlasnika:" Grid.Row="4" Grid.Column="0"
+                   Margin="0,0,10,10" VerticalAlignment="Center"/>
+        <TextBox x:Name="OwnerJmbgTextBox"
+                 Grid.Row="4" Grid.Column="1" Margin="0,0,0,10"
+                 Text="{Binding OwnerJmbg, UpdateSourceTrigger=PropertyChanged}"/>
+
+        <!-- Dugme -->
+        <Button Content="Sacuvaj hotel"
+                Grid.Row="5" Grid.ColumnSpan="2"
+                Width="140" Height="30"
+                HorizontalAlignment="Center"
+                Click="SaveButton_Click"/>
+    </Grid>
+</Window>
